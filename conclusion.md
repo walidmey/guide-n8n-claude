@@ -1,8 +1,12 @@
 # Ce que vous pouvez automatiser dès maintenant
 
+{% hint style="info" %}
+Vous avez acquis les bases pour concevoir, tester et fiabiliser des workflows n8n enrichis par Claude. Vous pouvez maintenant automatiser des tâches réelles de tri, d'analyse, de rédaction et d'orchestration sans partir de zéro.
+{% endhint %}
+
 Vous avez maintenant tout ce qu'il faut pour construire vos premiers workflows IA opérationnels.
 
----
+***
 
 ## Ce que vous avez appris
 
@@ -10,7 +14,7 @@ Vous savez comment n8n connecte des applications entre elles sans code. Vous sav
 
 Vous savez aussi ce qui attend vos workflows en production : erreurs silencieuses, données désordonnées, coûts qui s'accumulent. Et comment les anticiper.
 
----
+***
 
 ## Par où commencer
 
@@ -22,7 +26,7 @@ Si vous hésitez encore sur quel workflow déployer en premier, voici un guide s
 
 **Testez avec de vraies données.** Les exemples de démonstration masquent les problèmes. Dès le premier test, utilisez vos vraies sources — vos vrais emails, vos vrais flux RSS, vos vrais contacts CRM. Les cas limites apparaissent tout de suite.
 
----
+***
 
 ## Ce qui devient possible ensuite
 
@@ -40,7 +44,7 @@ Quelques directions que nos lecteurs ont explorées après avoir terminé ce gui
 
 **Suivi contractuel** — Chaque contrat important est surveillé par n8n. À J-30 de l'échéance, Claude rédige un email de renouvellement personnalisé et crée une tâche de suivi.
 
----
+***
 
 ## Une précision importante
 
@@ -50,15 +54,19 @@ Ce n'est pas "Claude fait le travail à votre place". C'est "Claude fait la part
 
 Cette distinction est importante pour calibrer vos attentes — et pour répondre honnêtement à vos collaborateurs quand ils vous demandent ce que vous automatisez.
 
----
+***
 
 ## Ressources pour aller plus loin
 
-- **Documentation n8n** : [docs.n8n.io](https://docs.n8n.io) — référence complète de tous les nœuds
-- **Documentation Claude** : [docs.anthropic.com](https://docs.anthropic.com) — guide de l'API et des bonnes pratiques de prompting
-- **Communauté n8n** : [community.n8n.io](https://community.n8n.io) — forum actif avec des milliers de workflows partagés
-- **Bibliothèque de workflows n8n** : [n8n.io/workflows](https://n8n.io/workflows) — templates prêts à l'emploi pour des centaines de cas d'usage
+* **Documentation n8n** : [docs.n8n.io](https://docs.n8n.io) — référence complète de tous les nœuds
+* **Documentation Claude** : [docs.anthropic.com](https://docs.anthropic.com) — guide de l'API et des bonnes pratiques de prompting
+* **Communauté n8n** : [community.n8n.io](https://community.n8n.io) — forum actif avec des milliers de workflows partagés
+* **Bibliothèque de workflows n8n** : [n8n.io/workflows](https://n8n.io/workflows) — templates prêts à l'emploi pour des centaines de cas d'usage
 
----
+***
 
-*Ce guide a été conçu pour être pratique avant d'être exhaustif. Si quelque chose n'est pas clair, ou si vous avez construit un workflow intéressant à partir de ces exemples, partagez-le — la communauté apprend de ce que chacun construit.*
+_Ce guide a été conçu pour être pratique avant d'être exhaustif. Si quelque chose n'est pas clair, ou si vous avez construit un workflow intéressant à partir de ces exemples, partagez-le — la communauté apprend de ce que chacun construit._
+
+{% hint style="success" %}
+Passez à l'action cette semaine : choisissez un seul processus répétitif, montez un premier workflow simple, puis testez-le avec de vraies données. En quelques heures, vous pouvez déjà récupérer du temps concret chaque semaine.
+{% endhint %}

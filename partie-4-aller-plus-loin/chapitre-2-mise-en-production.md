@@ -1,8 +1,16 @@
 # Déployer en production
 
+{% hint style="info" %}
+Mettre un workflow n8n en production, ce n'est pas seulement l'exécuter plus souvent. Il faut le rendre résilient aux erreurs, visible via le monitoring, maîtrisé en coûts et sûr côté données.
+{% endhint %}
+
 Un workflow qui "fonctionne" en test et un workflow qui "tourne en production" sont deux choses différentes. Cette section couvre ce qui change quand vous passez de l'un à l'autre.
 
----
+{% hint style="warning" %}
+Point critique : ne partez jamais en production sans gestion d'erreurs, retries et validation des sorties Claude. Un seul JSON invalide ou une API indisponible peut casser tout le workflow en silence.
+{% endhint %}
+
+***
 
 ## Ce qui casse en production (et pas en test)
 
@@ -12,7 +20,7 @@ Un workflow qui "fonctionne" en test et un workflow qui "tourne en production" s
 
 **Les services externes tombent.** Gmail peut être indisponible. L'API Anthropic peut retourner une erreur 503. Un webhook externe peut ne pas répondre. Si votre workflow n'est pas conçu pour gérer ça, il échoue silencieusement.
 
----
+***
 
 ## Gestion des erreurs : les bases
 
@@ -20,9 +28,9 @@ Un workflow qui "fonctionne" en test et un workflow qui "tourne en production" s
 
 Pour chaque nœud critique (Claude, Gmail, Notion, Airtable), activez les retries dans les paramètres du nœud :
 
-- **Retry on Fail :** activer
-- **Max Tries :** 3
-- **Wait Between Tries :** 5000ms (5 secondes)
+* **Retry on Fail :** activer
+* **Max Tries :** 3
+* **Wait Between Tries :** 5000ms (5 secondes)
 
 Cela suffit à gérer la majorité des erreurs transitoires (timeout, rate limit temporaire).
 
@@ -37,6 +45,7 @@ n8n permet de connecter un flux d'erreur à chaque workflow. Créez un sous-work
 Dans votre workflow principal, allez dans Settings → Error Workflow et sélectionnez ce workflow.
 
 **Notification d'erreur type :**
+
 ```
 Subject : ⚠️ Erreur workflow n8n — {{ $json.workflow.name }}
 
@@ -72,7 +81,7 @@ try {
 }
 ```
 
----
+***
 
 ## Monitoring : savoir ce qui se passe
 
@@ -80,22 +89,23 @@ try {
 
 n8n inclut un historique d'exécution natif. Consultez-le régulièrement (ou configurez une notification hebdomadaire) :
 
-- **Executions :** liste toutes les exécutions avec statut (succès / erreur)
-- **Durée :** identifiez les workflows qui ralentissent
-- **Erreurs :** filtrez par statut "Error" pour voir les échecs récents
+* **Executions :** liste toutes les exécutions avec statut (succès / erreur)
+* **Durée :** identifiez les workflows qui ralentissent
+* **Erreurs :** filtrez par statut "Error" pour voir les échecs récents
 
 ### Log personnalisé dans Airtable ou Notion
 
 Pour un suivi plus précis, ajoutez un nœud à la fin de chaque workflow qui journalise l'exécution :
 
 **Airtable — Create Record (table "Logs") :**
-- **Workflow :** `{{ $workflow.name }}`
-- **Statut :** `Succès`
-- **Durée :** `{{ $execution.resumedAt - $execution.startedAt }}ms`
-- **Items traités :** `{{ $input.all().length }}`
-- **Timestamp :** `{{ new Date().toISOString() }}`
 
----
+* **Workflow :** `{{ $workflow.name }}`
+* **Statut :** `Succès`
+* **Durée :** `{{ $execution.resumedAt - $execution.startedAt }}ms`
+* **Items traités :** `{{ $input.all().length }}`
+* **Timestamp :** `{{ new Date().toISOString() }}`
+
+***
 
 ## Contrôle des coûts
 
@@ -104,14 +114,16 @@ Pour un suivi plus précis, ajoutez un nœud à la fin de chaque workflow qui jo
 Chaque appel Claude consomme des tokens. Le coût dépend du modèle utilisé et du volume de tokens in/out.
 
 Pour estimer :
+
 1. Testez le workflow 3 à 5 fois avec des données réelles
 2. Notez le nombre de tokens consommés dans les métadonnées de réponse Claude
 3. Multipliez par votre volume quotidien / mensuel estimé
 
 **Règles pratiques :**
-- `claude-haiku` : ~10× moins cher que Sonnet — utilisez-le pour la classification simple, le filtrage, les tâches de routage
-- `claude-sonnet` : rapport qualité/coût optimal pour la rédaction, l'analyse
-- `claude-opus` : réservez-le pour les tâches critiques nécessitant le meilleur niveau de raisonnement
+
+* `claude-haiku` : \~10× moins cher que Sonnet — utilisez-le pour la classification simple, le filtrage, les tâches de routage
+* `claude-sonnet` : rapport qualité/coût optimal pour la rédaction, l'analyse
+* `claude-opus` : réservez-le pour les tâches critiques nécessitant le meilleur niveau de raisonnement
 
 ### Réduire les coûts sans sacrifier la qualité
 
@@ -121,7 +133,7 @@ Pour estimer :
 
 **Choisir le bon modèle par tâche.** Classification → Haiku. Rédaction → Sonnet. Analyse complexe multi-sources → Sonnet ou Opus.
 
----
+***
 
 ## Sécurité
 
@@ -129,16 +141,15 @@ Pour estimer :
 
 n8n dispose d'un système de Credentials dédié au stockage sécurisé des clés API. N'utilisez jamais de clés en clair dans les nœuds Code ou dans les expressions.
 
-✅ Correct : créer un Credential "Anthropic API" et le référencer dans le nœud
-❌ Incorrect : écrire `sk-ant-...` directement dans un champ
+✅ Correct : créer un Credential "Anthropic API" et le référencer dans le nœud ❌ Incorrect : écrire `sk-ant-...` directement dans un champ
 
 ### RGPD et données personnelles
 
 Si vos workflows traitent des données personnelles (emails de clients, fiches contacts), posez-vous ces questions :
 
-- Ces données sont-elles envoyées à l'API Anthropic ? → Oui, par défaut
-- Cela est-il compatible avec votre politique de confidentialité et vos obligations RGPD ?
-- Pouvez-vous minimiser les données transmises (objet uniquement, pas le corps de l'email) ?
+* Ces données sont-elles envoyées à l'API Anthropic ? → Oui, par défaut
+* Cela est-il compatible avec votre politique de confidentialité et vos obligations RGPD ?
+* Pouvez-vous minimiser les données transmises (objet uniquement, pas le corps de l'email) ?
 
 Pour les données sensibles, envisagez une instance n8n auto-hébergée avec chiffrement des données au repos.
 
@@ -146,22 +157,22 @@ Pour les données sensibles, envisagez une instance n8n auto-hébergée avec chi
 
 Si plusieurs personnes ont accès à votre instance n8n, limitez les permissions. n8n Enterprise propose des rôles fins — sur les versions Community, limitez l'accès à l'interface d'administration.
 
----
+***
 
 ## Checklist avant mise en production
 
 Avant d'activer un workflow en production, vérifiez :
 
-- [ ] Retries activés sur tous les nœuds critiques
-- [ ] Error Workflow configuré avec notification
-- [ ] Toutes les clés API stockées en Credentials (jamais en clair)
-- [ ] Nœuds de validation JSON ajoutés après chaque appel Claude
-- [ ] Test réalisé avec des données réelles (pas seulement des exemples)
-- [ ] Estimation du coût mensuel calculée
-- [ ] Logs d'exécution configurés
-- [ ] Comportement en cas d'échec documenté (que se passe-t-il si Claude est indisponible ?)
+* [ ] Retries activés sur tous les nœuds critiques
+* [ ] Error Workflow configuré avec notification
+* [ ] Toutes les clés API stockées en Credentials (jamais en clair)
+* [ ] Nœuds de validation JSON ajoutés après chaque appel Claude
+* [ ] Test réalisé avec des données réelles (pas seulement des exemples)
+* [ ] Estimation du coût mensuel calculée
+* [ ] Logs d'exécution configurés
+* [ ] Comportement en cas d'échec documenté (que se passe-t-il si Claude est indisponible ?)
 
----
+***
 
 ## Instance cloud vs auto-hébergée
 
@@ -170,28 +181,32 @@ n8n propose deux modes de déploiement :
 {% tabs %}
 {% tab title="n8n Cloud" %}
 **Avantages :**
-- Zéro maintenance infrastructure
-- Mises à jour automatiques
-- Support disponible
+
+* Zéro maintenance infrastructure
+* Mises à jour automatiques
+* Support disponible
 
 **Inconvénients :**
-- Coût mensuel (à partir de ~20€/mois)
-- Données hébergées chez n8n
-- Limites de volume selon le plan
+
+* Coût mensuel (à partir de \~20€/mois)
+* Données hébergées chez n8n
+* Limites de volume selon le plan
 
 **Recommandé pour :** individus et petites équipes qui veulent démarrer vite.
 {% endtab %}
 
 {% tab title="Auto-hébergé (Docker)" %}
 **Avantages :**
-- Contrôle total des données
-- Coût d'infrastructure uniquement
-- Pas de limites artificielles de volume
+
+* Contrôle total des données
+* Coût d'infrastructure uniquement
+* Pas de limites artificielles de volume
 
 **Inconvénients :**
-- Maintenance à votre charge
-- Mises à jour manuelles
-- Vous gérez la sécurité et les sauvegardes
+
+* Maintenance à votre charge
+* Mises à jour manuelles
+* Vous gérez la sécurité et les sauvegardes
 
 **Recommandé pour :** équipes avec des contraintes RGPD strictes, fort volume d'exécutions, ou compétences techniques en interne.
 {% endtab %}

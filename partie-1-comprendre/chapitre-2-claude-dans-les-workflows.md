@@ -1,10 +1,18 @@
 # Ce que Claude apporte dans un workflow
 
+{% hint style="info" %}
+Cette sous-partie montre le rôle concret de Claude dans un workflow n8n : analyser, rédiger, décider et transformer des données. À la fin, vous saurez identifier les tâches où Claude apporte une vraie valeur, et celles où il faut garder un contrôle humain.
+{% endhint %}
+
 La plupart des gens utilisent Claude comme un outil de réponse : vous posez une question, vous obtenez une réponse. C'est utile. Ce n'est pas de l'automatisation.
 
 Dans un workflow n8n, Claude joue un rôle différent. Il est appelé programmatiquement, reçoit des données structurées, et renvoie une réponse que le workflow peut utiliser pour prendre des décisions ou produire un livrable.
 
----
+{% hint style="success" %}
+Exemple concret : vous pouvez envoyer automatiquement chaque email entrant à Claude pour le classer, détecter son niveau d'urgence, puis router le message vers la bonne équipe sans tri manuel.
+{% endhint %}
+
+***
 
 ## Les quatre rôles de Claude dans un workflow
 
@@ -32,7 +40,7 @@ Claude convertit des données d'un format à un autre, extrait des informations 
 
 **Exemple :** Des prospects remplissent un formulaire en texte libre ("Je dirige une PME de 50 personnes dans le bâtiment et je cherche à améliorer ma gestion de chantier"). Claude extrait : secteur = bâtiment, taille = 50 personnes, besoin = gestion de chantier. Ces champs structurés vont directement dans votre CRM.
 
----
+***
 
 ## Ce que Claude ne fait pas bien dans un workflow
 
@@ -48,7 +56,7 @@ Claude convertit des données d'un format à un autre, extrait des informations 
 **Règle d'or :** Claude est un assistant, pas un décideur final. Utilisez-le pour enrichir votre processus de décision, pas pour remplacer le jugement humain sur des sujets critiques.
 {% endhint %}
 
----
+***
 
 ## Le prompt est votre code
 

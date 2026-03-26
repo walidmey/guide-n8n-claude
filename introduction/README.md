@@ -1,5 +1,9 @@
 # Pourquoi n8n + Claude change la donne
 
+{% hint style="info" %}
+Cette introduction présente pourquoi n8n et Claude forment une combinaison inédite. En 5 minutes, vous comprendrez ce que vous allez pouvoir automatiser — et pourquoi ce n'est pas comparable à ce que vous avez déjà essayé.
+{% endhint %}
+
 Il y a deux façons d'utiliser l'IA au travail.
 
 La première : ouvrir Claude, taper une question, lire la réponse, copier-coller ailleurs. Vous économisez quelques minutes. L'IA est un outil. Vous, vous êtes toujours le processeur central.
@@ -8,7 +12,7 @@ La deuxième : construire un workflow où Claude fait le travail pendant que vou
 
 La différence entre les deux, c'est n8n.
 
----
+***
 
 ## Ce que n8n change
 
@@ -20,7 +24,7 @@ Avec Claude intégré, ça devient différent. Vous pouvez maintenant ajouter un
 
 L'automatisation ne suit plus seulement des règles que vous avez définies à l'avance. Elle comprend le contenu, interprète, et prend des décisions contextuelles.
 
----
+***
 
 ## Pourquoi "sans coder" n'est pas un slogan marketing
 
@@ -34,23 +38,25 @@ n8n n'est pas dans cette catégorie. Il est utilisé en production par des entre
 "Sans coder" ne veut pas dire "sans logique". Vous allez devoir structurer vos workflows, comprendre comment les données circulent, et anticiper les cas d'erreur. Ce n'est pas du drag-and-drop magique — c'est de la pensée systémique accessible.
 {% endhint %}
 
----
+***
 
 ## Ce que ce guide est (et n'est pas)
 
 **Ce guide est :**
-- Un guide pratique avec des workflows réels, testés, réutilisables.
-- Une progression logique : de l'installation au déploiement.
-- Un point de vue honnête — y compris sur les limites et les cas où ça ne vaut pas la peine.
+
+* Un guide pratique avec des workflows réels, testés, réutilisables.
+* Une progression logique : de l'installation au déploiement.
+* Un point de vue honnête — y compris sur les limites et les cas où ça ne vaut pas la peine.
 
 **Ce guide n'est pas :**
-- Un manuel exhaustif de toutes les fonctionnalités de n8n.
-- Une démonstration théorique de "ce que l'IA peut faire un jour".
-- Un cours de programmation déguisé.
+
+* Un manuel exhaustif de toutes les fonctionnalités de n8n.
+* Une démonstration théorique de "ce que l'IA peut faire un jour".
+* Un cours de programmation déguisé.
 
 Si à la fin de ce guide vous avez un workflow qui tourne en production et vous économise au moins 2 heures par semaine, il aura atteint son objectif.
 
----
+***
 
 ## Comment lire ce guide
 
@@ -62,4 +68,6 @@ La Partie 3 est la plus dense et la plus utile : 5 workflows complets, avec tout
 
 La Partie 4 est pour ceux qui veulent aller plus loin : chaîner plusieurs agents IA, gérer les erreurs, déployer de façon robuste.
 
+{% hint style="success" %}
 **Commençons.**
+{% endhint %}

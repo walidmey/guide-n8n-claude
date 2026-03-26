@@ -1,27 +1,33 @@
 # Pourquoi les combiner ?
 
+{% hint style="info" %}
+Cette sous-partie aide à décider quand n8n + Claude est le bon choix, et quand une automatisation simple ou aucun workflow ne s'impose. À la fin, vous saurez repérer les cas d'usage avec le meilleur retour sur investissement.
+{% endhint %}
+
 La question mérite d'être posée directement : dans quels cas n8n + Claude est-il vraiment pertinent, et quand vaut-il mieux utiliser autre chose ?
 
----
+{% hint style="success" %}
+Exemple concret : si vous recevez des leads entrants chaque jour avec des messages libres, n8n peut capter chaque soumission pendant que Claude qualifie l'intention, extrait les infos utiles et route le lead vers le bon pipeline.
+{% endhint %}
+
+***
 
 ## La matrice de décision
 
 Avant d'automatiser quoi que ce soit, posez-vous ces deux questions :
 
-**1. La tâche est-elle répétitive ?**
-Si vous ne la faites qu'une fois par mois, l'automatisation ne vaut probablement pas l'investissement en temps de setup. Si vous la faites plusieurs fois par semaine (ou si quelqu'un dans votre équipe la fait), c'est un candidat sérieux.
+**1. La tâche est-elle répétitive ?** Si vous ne la faites qu'une fois par mois, l'automatisation ne vaut probablement pas l'investissement en temps de setup. Si vous la faites plusieurs fois par semaine (ou si quelqu'un dans votre équipe la fait), c'est un candidat sérieux.
 
-**2. La tâche nécessite-t-elle de comprendre du texte ou de produire du texte ?**
-Si oui, vous avez besoin de Claude (ou d'un modèle équivalent). Si la tâche ne manipule que des chiffres, des dates, ou des données structurées — une automatisation simple sans IA suffit.
+**2. La tâche nécessite-t-elle de comprendre du texte ou de produire du texte ?** Si oui, vous avez besoin de Claude (ou d'un modèle équivalent). Si la tâche ne manipule que des chiffres, des dates, ou des données structurées — une automatisation simple sans IA suffit.
 
-| Tâche répétitive ? | Nécessite comprendre/générer du texte ? | Solution recommandée |
-|---|---|---|
-| Oui | Non | n8n seul (ou Zapier) |
-| Non | Oui | Claude seul (interface chat) |
-| Oui | Oui | **n8n + Claude** |
-| Non | Non | Rien à automatiser |
+| Tâche répétitive ? | Nécessite comprendre/générer du texte ? | Solution recommandée         |
+| ------------------ | --------------------------------------- | ---------------------------- |
+| Oui                | Non                                     | n8n seul (ou Zapier)         |
+| Non                | Oui                                     | Claude seul (interface chat) |
+| Oui                | Oui                                     | **n8n + Claude**             |
+| Non                | Non                                     | Rien à automatiser           |
 
----
+***
 
 ## Les cas d'usage qui marchent vraiment
 
@@ -35,7 +41,7 @@ Après avoir construit des dizaines de ces workflows, voici les catégories qui 
 
 **Veille automatisée avec synthèse.** Sources RSS, newsletters, alertes Google. n8n collecte, Claude filtre et synthétise. Vous recevez un digest pertinent, pas un flux brut.
 
----
+***
 
 ## Les cas où ça ne vaut pas la peine
 
@@ -45,7 +51,7 @@ Après avoir construit des dizaines de ces workflows, voici les catégories qui 
 
 **Les processus instables.** Si le format de vos données change souvent, si vos critères de décision évoluent régulièrement, un workflow rigide sera plus une contrainte qu'une aide. Attendez que le processus soit stabilisé avant d'automatiser.
 
----
+***
 
 ## Ce que la combinaison débloque réellement
 

@@ -1,23 +1,30 @@
 # Workflow 5 — Rapport hebdomadaire automatique
 
+{% hint style="info" %}
+Cette sous-partie décrit un workflow qui agrège vos données hebdomadaires, les analyse avec Claude, puis produit un rapport prêt à partager. Il résout le problème du reporting manuel dispersé entre plusieurs outils et chronophage chaque semaine.
+{% endhint %}
+
 **Problème résolu :** Chaque semaine, vous passez 1 à 2 heures à rassembler des données éparpillées (métriques, tâches complétées, anomalies) pour produire un rapport de suivi. L'information existe — elle est juste dans cinq endroits différents.
 
 **Ce que fait ce workflow :** Chaque lundi matin, il collecte les données de la semaine passée depuis vos sources (Google Analytics, Notion, Airtable, ou autre), demande à Claude d'identifier les tendances et anomalies, et envoie un rapport structuré prêt à partager.
 
-**Temps d'exécution estimé :** 2 à 4 minutes.
-**Fréquence recommandée :** Chaque lundi à 8h00.
+{% hint style="success" %}
+À la fin de l’exécution, vous recevez automatiquement un rapport hebdomadaire structuré avec les faits saillants, l’analyse des métriques, les réalisations, les points d’attention et des recommandations actionnables.
+{% endhint %}
 
----
+**Temps d'exécution estimé :** 2 à 4 minutes. **Fréquence recommandée :** Chaque lundi à 8h00.
+
+***
 
 ## Nœuds nécessaires
 
-- **Schedule Trigger** — lundi 8h00
-- **HTTP Request** ou connecteurs natifs — collecte des données
-- **Anthropic Claude** — analyse et rédaction
-- **Gmail** — envoi du rapport
-- **Notion** (optionnel) — archivage
+* **Schedule Trigger** — lundi 8h00
+* **HTTP Request** ou connecteurs natifs — collecte des données
+* **Anthropic Claude** — analyse et rédaction
+* **Gmail** — envoi du rapport
+* **Notion** (optionnel) — archivage
 
----
+***
 
 ## Schéma du workflow
 
@@ -33,7 +40,7 @@
     → [Notion : archiver page rapport]
 ```
 
----
+***
 
 ## Version de base : rapport depuis Airtable + Notion
 
@@ -49,9 +56,9 @@ Cette version fonctionne sans API externes complexes.
 
 #### Nœud 1 — Schedule Trigger
 
-- **Trigger at :** 08:00
-- **Days :** Monday
-- **Timezone :** Europe/Paris
+* **Trigger at :** 08:00
+* **Days :** Monday
+* **Timezone :** Europe/Paris
 
 #### Nœud 2 — Code (calculer la plage de dates)
 
@@ -81,21 +88,22 @@ return [{
 
 Configurez une table "Métriques hebdo" dans Airtable avec des colonnes pour vos KPIs principaux. Exemple : chiffre d'affaires, leads, conversion, satisfaction.
 
-- **Operation :** Get Many Records
-- **Filter :** `IS_AFTER({Date}, '{{ $json.week_start }}') AND IS_BEFORE({Date}, '{{ $json.week_end }}')`
+* **Operation :** Get Many Records
+* **Filter :** `IS_AFTER({Date}, '{{ $json.week_start }}') AND IS_BEFORE({Date}, '{{ $json.week_end }}')`
 
 #### Nœud 4 — Notion (tâches complétées)
 
-- **Operation :** Get Database Items
-- **Filter :**
-  ```json
-  {
-    "and": [
-      { "property": "Statut", "select": { "equals": "Terminé" } },
-      { "property": "Date fin", "date": { "after": "{{ $node['Dates'].json.week_start }}" } }
-    ]
-  }
-  ```
+* **Operation :** Get Database Items
+*   **Filter :**
+
+    ```json
+    {
+      "and": [
+        { "property": "Statut", "select": { "equals": "Terminé" } },
+        { "property": "Date fin", "date": { "after": "{{ $node['Dates'].json.week_start }}" } }
+      ]
+    }
+    ```
 
 #### Nœud 5 — Code (assembler le contexte)
 
@@ -125,11 +133,12 @@ return [{
 }];
 ```
 
----
+***
 
 ## Nœud Claude — Analyse et rédaction
 
 **System Prompt :**
+
 ```
 Tu es un assistant d'analyse de performance.
 Tu reçois des données de la semaine écoulée et tu rédiges un rapport
@@ -165,6 +174,7 @@ Format de sortie obligatoire :
 ```
 
 **User Message :**
+
 ```
 Période : {{ $json.week_label }}
 
@@ -175,16 +185,17 @@ TÂCHES COMPLÉTÉES :
 {{ $json.taches }}
 ```
 
----
+***
 
 ## Envoi du rapport
 
 ### Gmail
 
-- **To :** votre email (et ceux de vos collaborateurs si partagé)
-- **Subject :** `Rapport hebdo — {{ $json.week_label }}`
-- **Email Type :** HTML
-- **HTML :**
+* **To :** votre email (et ceux de vos collaborateurs si partagé)
+* **Subject :** `Rapport hebdo — {{ $json.week_label }}`
+* **Email Type :** HTML
+* **HTML :**
+
 ```html
 <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto;">
   <h1 style="color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px;">
@@ -204,11 +215,12 @@ TÂCHES COMPLÉTÉES :
 Créez une base "Rapports hebdos" dans Notion. Chaque semaine, une nouvelle page est créée avec le rapport complet, consultable et cherchable.
 
 **Notion — Create Page :**
-- **Titre :** `Rapport — {{ $node["Dates"].json.week_label }}`
-- **Contenu :** `{{ $node["Claude"].json.output[0].content[0].text }}`
-- **Semaine :** `{{ $node["Dates"].json.week_start }}`
 
----
+* **Titre :** `Rapport — {{ $node["Dates"].json.week_label }}`
+* **Contenu :** `{{ $node["Claude"].json.output[0].content[0].text }}`
+* **Semaine :** `{{ $node["Dates"].json.week_start }}`
+
+***
 
 ## Variante : rapport depuis Google Analytics
 
@@ -242,15 +254,15 @@ Body :
 
 Les données renvoyées alimentent directement le contexte de Claude pour une analyse plus précise.
 
----
+***
 
 ## Personnaliser les sections du rapport
 
 Le prompt définit la structure. Modifiez les sections selon votre contexte :
 
-- **E-commerce :** CA, panier moyen, taux de conversion, retours
-- **SaaS :** MRR, churn, nouvelles inscriptions, tickets support
-- **Marketing :** impressions, clics, leads qualifiés, coût par lead
-- **Opérations :** tâches livrées vs planifiées, délais, incidents
+* **E-commerce :** CA, panier moyen, taux de conversion, retours
+* **SaaS :** MRR, churn, nouvelles inscriptions, tickets support
+* **Marketing :** impressions, clics, leads qualifiés, coût par lead
+* **Opérations :** tâches livrées vs planifiées, délais, incidents
 
 La force de ce workflow est que Claude adapte son analyse au contenu — vous n'avez pas à modifier la logique pour changer de métriques, juste le prompt et les sources de données.

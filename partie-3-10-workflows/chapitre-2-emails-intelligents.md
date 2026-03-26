@@ -1,21 +1,29 @@
 # Workflow 2 — Tri et réponse aux emails
 
+{% hint style="info" %}
+Cette sous-partie décrit un workflow qui analyse vos emails entrants, les classe par catégorie et urgence, puis déclenche l’action adaptée. Il résout le problème du tri manuel et vous aide à traiter plus vite les messages qui comptent vraiment.
+{% endhint %}
+
 **Problème résolu :** Votre boîte email est un mélange de demandes urgentes, de newsletters, de sollicitations commerciales, et de vraies questions clients. Vous passez trop de temps à trier avant même de commencer à répondre.
 
 **Ce que fait ce workflow :** À intervalle régulier, il analyse vos emails non lus, les classe par type et urgence, crée des tâches pour ceux qui nécessitent une action, et prépare des brouillons de réponse pour les demandes standard.
 
----
+{% hint style="success" %}
+À la fin de l'exécution, vos emails non lus sont triés automatiquement : les messages importants deviennent des tâches ou des brouillons de réponse, tandis que les newsletters et messages sans intérêt sont écartés du flux principal.
+{% endhint %}
+
+***
 
 ## Nœuds nécessaires
 
-- **Schedule Trigger** — toutes les 2 heures (natif n8n)
-- **Gmail — Get Many Messages** — lecture des emails non lus
-- **Anthropic Claude** — analyse et classification
-- **Switch** — routage selon la catégorie
-- **Gmail — Create Draft** — création de brouillons
-- **Notion / Airtable** — création de tâches (optionnel)
+* **Schedule Trigger** — toutes les 2 heures (natif n8n)
+* **Gmail — Get Many Messages** — lecture des emails non lus
+* **Anthropic Claude** — analyse et classification
+* **Switch** — routage selon la catégorie
+* **Gmail — Create Draft** — création de brouillons
+* **Notion / Airtable** — création de tâches (optionnel)
 
----
+***
 
 ## Schéma du workflow
 
@@ -30,19 +38,20 @@
             → [spam] → [archiver]
 ```
 
----
+***
 
 ## Configuration détaillée
 
 ### Nœud 1 — Gmail : Get Many Messages
 
-- **Operation :** Get Many
-- **Filters :** `is:unread newer_than:2h`
-- **Max Results :** 50
+* **Operation :** Get Many
+* **Filters :** `is:unread newer_than:2h`
+* **Max Results :** 50
 
 ### Nœud 2 — Anthropic Claude (Analyse)
 
 **System Prompt :**
+
 ```
 Tu es un assistant de gestion d'emails professionnel.
 Analyse l'email fourni et renvoie UNIQUEMENT ce JSON :
@@ -59,6 +68,7 @@ Aucun autre texte que ce JSON.
 ```
 
 **User Message :**
+
 ```
 De : {{ $json.from }}
 Objet : {{ $json.subject }}
@@ -70,15 +80,17 @@ Corps :
 ### Nœud 3 — Switch (routage par catégorie)
 
 Créez 5 branches basées sur la valeur de `{{ $json.categorie }}` :
-- `commercial` → branche 1
-- `support` → branche 2
-- `partenariat` → branche 3
-- `newsletter` → branche 4
-- Default (spam, autre) → branche 5
+
+* `commercial` → branche 1
+* `support` → branche 2
+* `partenariat` → branche 3
+* `newsletter` → branche 4
+* Default (spam, autre) → branche 5
 
 ### Nœud 4a — Branche commercial : créer un brouillon
 
 **Gmail — Create Draft :**
+
 ```
 To : {{ $node["Gmail"].json.from }}
 Subject : Re: {{ $node["Gmail"].json.subject }}
@@ -92,19 +104,21 @@ Le brouillon est créé mais pas envoyé. Vous le retrouvez dans vos brouillons 
 ### Nœud 4b — Branche support : créer une tâche Notion
 
 **Notion — Create Page :**
-- **Database :** votre base de tâches support
-- **Titre :** `[Support] {{ $node["Gmail"].json.subject }}`
-- **Priorité :** `{{ $node["Analyse Claude"].json.urgence }}`
-- **Description :** `{{ $node["Analyse Claude"].json.objet_reel }}`
-- **Email de :** `{{ $node["Gmail"].json.from }}`
+
+* **Database :** votre base de tâches support
+* **Titre :** `[Support] {{ $node["Gmail"].json.subject }}`
+* **Priorité :** `{{ $node["Analyse Claude"].json.urgence }}`
+* **Description :** `{{ $node["Analyse Claude"].json.objet_reel }}`
+* **Email de :** `{{ $node["Gmail"].json.from }}`
 
 ### Nœud 4d — Branche newsletter : marquer comme lu
 
 **Gmail — Modify Message :**
-- **Mark as read :** true
-- **Remove Label :** INBOX (pour nettoyer votre boîte si vous souhaitez)
 
----
+* **Mark as read :** true
+* **Remove Label :** INBOX (pour nettoyer votre boîte si vous souhaitez)
+
+***
 
 ## Points d'attention
 

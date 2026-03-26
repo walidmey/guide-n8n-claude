@@ -1,20 +1,28 @@
 # Workflow 4 — CRM enrichi par l'IA
 
+{% hint style="info" %}
+Cette sous-partie décrit un workflow qui enrichit automatiquement les fiches contact de votre CRM avec du contexte public utile. Il résout le problème du temps perdu à rechercher manuellement des informations avant chaque prise de contact.
+{% endhint %}
+
 **Problème résolu :** Votre CRM contient des contacts avec des informations incomplètes. Avant chaque appel ou email, vous passez 15 à 20 minutes à rechercher manuellement le contexte sur LinkedIn, le site de l'entreprise, les actualités récentes. Ce temps s'accumule sur des dizaines de contacts par semaine.
 
 **Ce que fait ce workflow :** Quand un nouveau contact est ajouté dans votre CRM (HubSpot, Airtable, Notion), il collecte automatiquement des informations publiques sur la personne et l'entreprise, génère un résumé d'enrichissement structuré, et met à jour la fiche contact.
 
----
+{% hint style="success" %}
+À la fin de l’exécution, chaque nouveau contact reçoit automatiquement un résumé d’entreprise, des angles d’accroche pour l’appel, et une fiche CRM mise à jour sans recherche manuelle.
+{% endhint %}
+
+***
 
 ## Nœuds nécessaires
 
-- **HubSpot Trigger** ou **Airtable Trigger** — nouveau contact
-- **HTTP Request** — recherche d'informations (LinkedIn, site web)
-- **Anthropic Claude** — synthèse et structuration
-- **HubSpot / Airtable** — mise à jour de la fiche
-- **Gmail** — notification optionnelle
+* **HubSpot Trigger** ou **Airtable Trigger** — nouveau contact
+* **HTTP Request** — recherche d'informations (LinkedIn, site web)
+* **Anthropic Claude** — synthèse et structuration
+* **HubSpot / Airtable** — mise à jour de la fiche
+* **Gmail** — notification optionnelle
 
----
+***
 
 ## Schéma du workflow
 
@@ -26,7 +34,7 @@
     → [Gmail : notification "contact enrichi"]
 ```
 
----
+***
 
 ## Variante Airtable (recommandée pour commencer)
 
@@ -35,33 +43,34 @@ Si vous n'avez pas HubSpot, cette variante utilise Airtable comme CRM léger.
 ### Structure de la table Airtable "Contacts"
 
 Créez une table avec ces champs :
-- **Nom** (texte)
-- **Email** (email)
-- **Entreprise** (texte)
-- **Site web** (URL)
-- **Poste** (texte)
-- **Statut enrichissement** (select) — À enrichir / En cours / Enrichi
-- **Résumé IA** (texte long)
-- **Contexte appel** (texte long)
-- **Dernière mise à jour** (date)
 
----
+* **Nom** (texte)
+* **Email** (email)
+* **Entreprise** (texte)
+* **Site web** (URL)
+* **Poste** (texte)
+* **Statut enrichissement** (select) — À enrichir / En cours / Enrichi
+* **Résumé IA** (texte long)
+* **Contexte appel** (texte long)
+* **Dernière mise à jour** (date)
+
+***
 
 ## Configuration détaillée
 
 ### Nœud 1 — Airtable Trigger
 
-- **Event :** New Record
-- **Table :** Contacts
-- **Filter :** Statut enrichissement = "À enrichir"
+* **Event :** New Record
+* **Table :** Contacts
+* **Filter :** Statut enrichissement = "À enrichir"
 
 ### Nœud 2 — HTTP Request (site web de l'entreprise)
 
 Ce nœud récupère le contenu de la page d'accueil pour extraire le contexte métier.
 
-- **Method :** GET
-- **URL :** `{{ $json['Site web'] }}`
-- **Options > Response Format :** Text
+* **Method :** GET
+* **URL :** `{{ $json['Site web'] }}`
+* **Options > Response Format :** Text
 
 {% hint style="warning" %}
 Certains sites bloquent les requêtes automatiques. Si la requête échoue, ajoutez un nœud "If" pour gérer les erreurs et continuer le workflow même sans cette donnée.
@@ -70,6 +79,7 @@ Certains sites bloquent les requêtes automatiques. Si la requête échoue, ajou
 ### Nœud 3 — Anthropic Claude (enrichissement)
 
 **System Prompt :**
+
 ```
 Tu es un assistant de recherche commerciale.
 À partir des informations fournies sur un contact et son entreprise,
@@ -96,6 +106,7 @@ CONTEXTE APPEL :
 ```
 
 **User Message :**
+
 ```
 Contact : {{ $json.Nom }}
 Poste : {{ $json.Poste }}
@@ -130,13 +141,13 @@ return [{
 
 **Operation :** Update Record
 
-- **Record ID :** `{{ $json.id }}` (l'ID du record Airtable)
-- **Résumé IA :** `{{ $json.resume_entreprise }}`
-- **Contexte appel :** `{{ $json.contexte_appel }}`
-- **Statut enrichissement :** `Enrichi`
-- **Dernière mise à jour :** `{{ new Date().toISOString() }}`
+* **Record ID :** `{{ $json.id }}` (l'ID du record Airtable)
+* **Résumé IA :** `{{ $json.resume_entreprise }}`
+* **Contexte appel :** `{{ $json.contexte_appel }}`
+* **Statut enrichissement :** `Enrichi`
+* **Dernière mise à jour :** `{{ new Date().toISOString() }}`
 
----
+***
 
 ## Enrichissement avancé avec l'API LinkedIn (option)
 
@@ -156,7 +167,7 @@ Query Parameters :
 
 Ajoutez les données renvoyées (expériences, formations, posts récents) au User Message du nœud Claude pour un enrichissement plus précis.
 
----
+***
 
 ## Notification email optionnelle
 
@@ -165,6 +176,7 @@ Ajoutez un nœud Gmail après la mise à jour Airtable pour être notifié quand
 **Subject :** `Contact enrichi — {{ $json.Nom }} ({{ $json.Entreprise }})`
 
 **Body :**
+
 ```
 Nouveau contact enrichi dans votre CRM.
 
@@ -179,7 +191,7 @@ Contexte appel :
 {{ $json.contexte_appel }}
 ```
 
----
+***
 
 ## Variante : enrichissement en lot
 

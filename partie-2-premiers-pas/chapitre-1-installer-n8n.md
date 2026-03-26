@@ -1,8 +1,19 @@
 # Installer n8n en 15 minutes
 
+{% hint style="info" %}
+Cette sous-partie vous guide pas à pas pour installer n8n. Durée estimée : 15 minutes. À la fin, vous aurez une instance n8n fonctionnelle prête à recevoir votre premier workflow.
+{% endhint %}
+
+### Avant de commencer
+
+* [ ] Avoir accès à un terminal ou ligne de commande
+* [ ] Avoir Docker ou Node.js installé
+* [ ] Disposer d'une connexion internet stable
+* [ ] Avoir 15 minutes devant soi
+
 Deux options pour démarrer avec n8n. Choisissez selon votre contexte.
 
----
+***
 
 ## Option A — n8n Cloud (recommandée pour débuter)
 
@@ -10,23 +21,25 @@ La plus simple. Pas de serveur à gérer, pas d'installation technique.
 
 {% stepper %}
 {% step %}
-### Créer un compte
+#### Créer un compte
 
-Allez sur [n8n.io](https://n8n.io) et cliquez "Get started for free". Vous aurez accès à un essai gratuit de 14 jours, puis à un plan Starter à partir de ~20 €/mois.
+Allez sur [n8n.io](https://n8n.io) et cliquez "Get started for free". Vous aurez accès à un essai gratuit de 14 jours, puis à un plan Starter à partir de \~20 €/mois.
 {% endstep %}
+
 {% step %}
-### Accéder à votre instance
+#### Accéder à votre instance
 
 Après inscription, vous êtes redirigé vers votre espace de travail n8n. L'URL ressemble à `votre-nom.app.n8n.cloud`.
 {% endstep %}
+
 {% step %}
-### Explorer l'interface
+#### Explorer l'interface
 
 L'interface est divisée en 3 zones : le canvas (espace de travail visuel), le panneau de nœuds (à gauche, tous les nœuds disponibles), et le panneau de paramètres (à droite, pour configurer le nœud sélectionné).
 {% endstep %}
 {% endstepper %}
 
----
+***
 
 ## Option B — Auto-hébergement avec Docker (pour les utilisateurs avancés)
 
@@ -62,7 +75,7 @@ Accédez à n8n via `http://localhost:5678` (ou l'IP de votre serveur).
 L'auto-hébergement nécessite que vous gériez vous-même les mises à jour, les sauvegardes, et la disponibilité. Pour un usage professionnel critique, pensez à mettre en place des sauvegardes régulières.
 {% endhint %}
 
----
+***
 
 ## Premiers repères dans l'interface
 
@@ -76,26 +89,32 @@ Une fois connecté, vous voyez le tableau de bord. Voici les sections importante
 
 **Settings** — Configuration générale, gestion des utilisateurs si vous travaillez en équipe, et abonnement.
 
----
+***
 
 ## Créer votre premier workflow vide
 
 {% stepper %}
 {% step %}
-### Cliquer sur "New Workflow"
+#### Cliquer sur "New Workflow"
 
 Dans le tableau de bord, cliquez le bouton "+ New Workflow" en haut à droite.
 {% endstep %}
+
 {% step %}
-### Nommer le workflow
+#### Nommer le workflow
 
 Cliquez sur "My Workflow" en haut à gauche et renommez-le. Exemple : "Test — Premier workflow Claude".
 {% endstep %}
+
 {% step %}
-### Ajouter un nœud déclencheur
+#### Ajouter un nœud déclencheur
 
 Cliquez sur le "+" dans le canvas ou sur "Add first step". Choisissez "Manual Trigger" pour démarrer — cela vous permet de déclencher le workflow manuellement, ce qui est parfait pour les tests.
 {% endstep %}
 {% endstepper %}
 
 Vous avez maintenant un workflow avec un seul nœud. Dans le chapitre suivant, vous allez y connecter Claude.
+
+{% hint style="warning" %}
+Si vous rencontrez une erreur lors du démarrage, vérifiez que le port 5678 n'est pas déjà utilisé par une autre application.
+{% endhint %}
